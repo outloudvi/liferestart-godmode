@@ -31,7 +31,9 @@
     )
   }
 
-  function showAnalysis(item: number) {
+  function showAnalysis(_item: string) {
+    if (_item === '') return
+    const item = Number(_item)
     const event = vendor.getEventById(item)
     if (event === null) {
       alert('No such event')
@@ -55,6 +57,7 @@
     bind:value={_selected}
     on:change={() => showAnalysis(_selected)}
   >
+    <option value="" />
     {#each filteredEvents as evt}
       <option value={evt.id}>
         {evt.event} - #{evt.id}
