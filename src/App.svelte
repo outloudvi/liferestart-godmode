@@ -98,7 +98,7 @@
     </ul>
   {/if}
   {#if hierarchyRoot.length > 0}
-    最久远的事件可能在这些年龄发生： {hierarchyRoot.join(', ')}
+    最久远的引导可能在这些年龄发生： {hierarchyRoot.join(', ')}
   {/if}
 </div>
 
