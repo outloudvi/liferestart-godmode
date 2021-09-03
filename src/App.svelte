@@ -47,7 +47,13 @@
 </script>
 
 <div class="App">
-  <h1>LifeRestart Helpers</h1>
+  <h1>
+    LifeRestart God
+    <sup>
+      <small>(<a href="https://uau.li/~god">uau.li/~god</a>)</small>
+    </sup>
+  </h1>
+
   <input type="text" placeholder="Search..." bind:value={_search} />
   <button on:click={() => filterList(_search)}>Search</button>
   <br />
@@ -101,6 +107,12 @@
     最久远的引导可能在这些年龄发生： {hierarchyRoot.join(', ')}
   {/if}
 </div>
+<hr />
+<div class="center">
+  <a href="https://github.com/outloudvi/liferestart-godmode">本页源码</a> |
+  <a href="https://github.com/VickScarlet/lifeRestart">原作</a>
+  | <a href="https://liferestart.syaro.io/">游玩</a>
+</div>
 
 <style>
   :global(body) {
@@ -118,6 +130,10 @@
 
   .App p {
     margin: 0.4rem;
+  }
+
+  .center {
+    text-align: center;
   }
 
   .App-header {
