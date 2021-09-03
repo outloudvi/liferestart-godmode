@@ -4,16 +4,31 @@
   const EVENTS = Object.values(vendor.EVENTS)
 
   let _selected: number
+  let _search: string = ''
 
   let factors: vendor.EventFactor[] = []
   let hierarchy: vendor.EventHierarchyReply[] = []
   let hierarchyRoot: number[] = []
+  let filteredEvents = EVENTS
 
   // @ts-ignore
   window.vendor = vendor
 
   function dedup(x: any[]): any[] {
     return [...new Set(x)]
+  }
+
+  function filterList(q: string) {
+    if (q === '') {
+      filteredEvents = EVENTS
+      return
+    }
+    filteredEvents = EVENTS.filter(
+      (x) =>
+        String(x.id).includes(_search) ||
+        x.event.includes(_search) ||
+        (x.postevent || '').includes(_search)
+    )
   }
 
   function showAnalysis(item: number) {
@@ -31,12 +46,16 @@
 
 <div class="App">
   <h1>LifeRestart Helpers</h1>
+  <input type="text" placeholder="Search..." bind:value={_search} />
+  <button on:click={() => filterList(_search)}>Search</button>
+  <br />
+  <br />
   <select
     id="selector"
     bind:value={_selected}
     on:change={() => showAnalysis(_selected)}
   >
-    {#each EVENTS as evt}
+    {#each filteredEvents as evt}
       <option value={evt.id}>
         {evt.event} - #{evt.id}
       </option>
