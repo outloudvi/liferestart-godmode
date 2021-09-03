@@ -1,0 +1,3 @@
+[submodule "src/vendor"]
+	path = src/vendor
+	url = https://github.com/VickScarlet/lifeRestart
