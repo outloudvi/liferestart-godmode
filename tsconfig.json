@@ -3,6 +3,7 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "module": "esnext",
+    "target": "ES2018",
     "moduleResolution": "node",
     "jsx": "preserve",
     "baseUrl": "./",
@@ -23,6 +24,7 @@
     "resolveJsonModule": true,
     "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
-    "importsNotUsedAsValues": "error"
+    "importsNotUsedAsValues": "error",
+    "allowJs": true
   }
 }
