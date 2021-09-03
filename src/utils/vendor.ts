@@ -35,10 +35,11 @@ export function checkEventFactor(evt: EventInfo): EventFactor[] {
       (x) => x.split(':')[1] == String(evt.id)
     )
     for (const i of canComeFrom) {
-      ret.push({
-        event: item.id,
-        condition: i.split(':')[0],
-      })
+      if (item.id !== evt.id)
+        ret.push({
+          event: item.id,
+          condition: i.split(':')[0],
+        })
     }
   }
 
