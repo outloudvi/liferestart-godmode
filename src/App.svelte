@@ -65,21 +65,21 @@
 
   {#if factors.length > 0}
     <h3>这个事件...</h3>
-    <!-- <ul> -->
-    <!-- {#each factors.filter((x) => x.event) as factor}
+    <ul>
+      {#each factors.filter((x) => x.event) as factor}
         <li>
           可能于 「{vendor.EVENTS[factor.event].event}」 (#{factor.event})
           之后发生。
         </li>
-      {/each} -->
-    {#if factors.filter((x) => x.age).length > 0}
-      <!-- <li> -->
-      可能在以下年龄自然发生：{dedup(
-        factors.filter((x) => x.age).map((x) => x.age)
-      ).join(', ')}
-      <!-- </li> -->
-    {/if}
-    <!-- </ul> -->
+      {/each}
+      {#if factors.filter((x) => x.age != undefined).length > 0}
+        <li>
+          可能在以下年龄自然发生：{dedup(
+            factors.filter((x) => x.age != undefined).map((x) => x.age)
+          ).join(', ')}
+        </li>
+      {/if}
+    </ul>
   {/if}
   <hr />
 
