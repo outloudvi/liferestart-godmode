@@ -15,6 +15,24 @@
   // @ts-ignore
   window.vendor = vendor
 
+  function numRangeToStr(x: number[]): string {
+    x.sort((a, b) => a - b)
+
+    const ret: string[] = []
+    let left = x[0]
+    let right = x[0]
+    for (let i = 1; i < x.length; i++) {
+      if (x[i] - right === 1) {
+        right = x[i]
+      } else {
+        ret.push(left === right ? String(left) : `${left}-${right}`)
+        left = right = x[i]
+      }
+    }
+    ret.push(left === right ? String(left) : `${left}-${right}`)
+    return ret.join(', ')
+  }
+
   function dedup(x: any[]): any[] {
     return [...new Set(x)]
   }
@@ -87,9 +105,9 @@
       {/each}
       {#if factors.filter((x) => x.age != undefined).length > 0}
         <li>
-          可能在以下年龄自然发生：{dedup(
-            factors.filter((x) => x.age != undefined).map((x) => x.age)
-          ).join(', ')}
+          可能在以下年龄自然发生：{numRangeToStr(
+            dedup(factors.filter((x) => x.age != undefined).map((x) => x.age))
+          )}
         </li>
       {/if}
     </ul>
@@ -109,7 +127,7 @@
   {/if}
 
   {#if hierarchyRoot.length > 0}
-    最久远的引导可能在这些年龄发生： {hierarchyRoot.join(', ')}
+    最久远的引导可能在这些年龄发生： {numRangeToStr(hierarchyRoot)}
   {/if}
 
   {#if laterEvents.length}
