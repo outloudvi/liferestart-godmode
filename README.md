@@ -1,29 +1,45 @@
-# New Project
+# 人生重开模拟器之上帝模式
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+[**开启上帝模式视图**](https://liferestart-god.netlify.app/)
 
-## Available Scripts
+## 起源
 
-### npm start
+> \- 怎么还有[这种玩意](https://github.com/VickScarlet/lifeRestart/blob/4d22567ad44f52ed09018f8a5b357c4c45ea943e/data/events.json#L11333-L11339)的。
+>
+> \- 恶堕剧情要怎么进？
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+## 功能
+* [x] 查询事件后继
+* [x] 查询事件前驱
+* [x] 查询事件可能发生的年龄
+* [x] 使用 ID 或剧情搜索事件
+* [ ] 解析来自其它模拟器分支的内容
+* [ ] 绘制流程图
+* [ ] 显示事件发生的详细条件
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+## 更新
 
-### npm test
+跟随 [人生重开模拟器](https://github.com/VickScarlet/lifeRestart) 更新。
 
-Launches the test runner in the interactive watch mode.
-See the section about running tests for more information.
+## 协议
 
-### npm run build
+MIT
 
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
+## 恶堕剧情要怎么进？
 
-**For the best production performance:** Add a build bundler plugin like [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/main/plugins/plugin-webpack) or [snowpack-plugin-rollup-bundle](https://github.com/ParamagicDev/snowpack-plugin-rollup-bundle) to your `snowpack.config.mjs` config file.
-
-### Q: What about Eject?
-
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
+> 至于恶堕的流程是这样的：
+> * 有仙女棒
+> * 女孩 (P=100/212)
+> 
+> 家境不能 < 3 否则看不了动漫
+> 
+> * 看动漫 (10007/10008) (P 不太大不过有好几年的机会)
+> 
+> 颜值 (CHR) 不能 > 5 并且 智力 (INT) 不能 > 5，否则会跳走
+> 
+> * 十二岁变身魔法少女 (11451) (P~=1)
+> * 十三岁遭到触手女王的攻击 (11457) (P~=1/9)
+> 
+> 如果智力 (INT) < 5：
+> 
+> * 恶堕 (21457)
