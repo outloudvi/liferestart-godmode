@@ -10,6 +10,7 @@
   let hierarchy: vendor.EventHierarchyReply[] = []
   let hierarchyRoot: number[] = []
   let filteredEvents = EVENTS
+  let laterEvents: number[] = []
 
   // @ts-ignore
   window.vendor = vendor
@@ -35,6 +36,9 @@
     if (_item === '') return
     const item = Number(_item)
     const event = vendor.getEventById(item)
+    laterEvents = (event?.branch || []).map((x) =>
+      x.split(':').length > 1 ? Number(x.split(':')[1]) : Number(x)
+    )
     if (event === null) {
       alert('No such event')
       return
@@ -70,9 +74,9 @@
       </option>
     {/each}
   </select>
-  <hr />
 
   {#if factors.length > 0}
+    <hr />
     <h3>这个事件...</h3>
     <ul>
       {#each factors.filter((x) => x.event) as factor}
@@ -90,9 +94,9 @@
       {/if}
     </ul>
   {/if}
-  <hr />
 
   {#if hierarchy.length > 0}
+    <hr />
     <h3>来自世界之神的引导...</h3>
     <ul>
       {#each hierarchy as evt}
@@ -103,8 +107,21 @@
       {/each}
     </ul>
   {/if}
+
   {#if hierarchyRoot.length > 0}
     最久远的引导可能在这些年龄发生： {hierarchyRoot.join(', ')}
+  {/if}
+
+  {#if laterEvents.length}
+    <hr />
+    <h3>这个事件之后可能会...</h3>
+    <ul>
+      {#each laterEvents as evtId}
+        <li>
+          「{vendor.EVENTS[evtId].event}」 (#{evtId})。
+        </li>
+      {/each}
+    </ul>
   {/if}
 </div>
 <hr />
