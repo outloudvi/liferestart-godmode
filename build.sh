@@ -1,5 +1,4 @@
 #!/bin/bash
-rm -r src/vendor/utils
-rm -r src/vendor/test
+./clean.sh
 npm ci
 npm run build
