@@ -15,6 +15,7 @@
   let filteredEvents = EVENTS
   let laterEvents: number[] = []
   let lastEvent = -1
+  let hierarchyCache: { id: number; item: any }[] = []
 
   export let params = {}
 
@@ -67,8 +68,23 @@
       alert('No such event')
       return
     }
+
     factors = vendor.checkEventFactor(event)
-    const hierarchyList = vendor.checkEventHierarchy(event)
+
+    const hierarchyCacheHit = hierarchyCache.filter((x) => x.id === event.id)
+    let hierarchyList
+    if (hierarchyCacheHit.length === 1) {
+      hierarchyList = hierarchyCache[0].item
+    } else {
+      hierarchyList = vendor.checkEventHierarchy(event)
+      hierarchyCache.push({
+        id: event.id,
+        item: hierarchyList,
+      })
+      if (hierarchyCache.length > 20) {
+        hierarchyCache.splice(0, 1)
+      }
+    }
     hierarchy = hierarchyList.events
     hierarchyRoot = dedup(hierarchyList.parents)
   }
@@ -92,8 +108,15 @@
     </sup>
   </h1>
 
-  <input type="text" placeholder="Search..." bind:value={_search} />
-  <button on:click={() => filterList(_search)}>Search</button>
+  <input
+    type="text"
+    placeholder="搜索事件或编号..."
+    bind:value={_search}
+    on:keydown={(e) => {
+      if (e.key === 'Enter') filterList(_search)
+    }}
+  />
+  <button on:click={() => filterList(_search)}>搜索</button>
   <br />
   <br />
   <select
@@ -104,7 +127,7 @@
     <option value="" />
     {#each filteredEvents as evt}
       <option value={evt.id}>
-        {evt.event} - #{evt.id}
+        {evt.event} (#{evt.id})
       </option>
     {/each}
   </select>
