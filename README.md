@@ -1,6 +1,6 @@
 # 人生重开模拟器之上帝模式
 
-[**开启上帝模式视图**](https://liferestart-god.netlify.app/)
+[**开启上帝模式视图**](https://lrgod.outv.im/)
 
 ## 起源
 
