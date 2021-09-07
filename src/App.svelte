@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { afterUpdate, onMount } from 'svelte'
+  import { link, location } from 'svelte-spa-router'
+
   import * as vendor from './utils/vendor'
 
   const EVENTS = Object.values(vendor.EVENTS)
@@ -11,6 +14,9 @@
   let hierarchyRoot: number[] = []
   let filteredEvents = EVENTS
   let laterEvents: number[] = []
+  let lastEvent = -1
+
+  export let params = {}
 
   // @ts-ignore
   window.vendor = vendor
@@ -66,6 +72,16 @@
     hierarchy = hierarchyList.events
     hierarchyRoot = dedup(hierarchyList.parents)
   }
+
+  afterUpdate(() => {
+    const evt = Number(params.event)
+    if (Number.isNaN(evt)) return
+    if (lastEvent === evt) return
+
+    _selected = evt
+    showAnalysis(evt)
+    lastEvent = evt
+  })
 </script>
 
 <div class="App">
@@ -99,8 +115,10 @@
     <ul>
       {#each factors.filter((x) => x.event) as factor}
         <li>
-          可能于 「{vendor.EVENTS[factor.event].event}」 (#{factor.event})
-          之后发生。
+          可能于 「{vendor.EVENTS[factor.event].event}」 (<a
+            href={`/e/${factor.event}`}
+            use:link>#{factor.event}</a
+          >) 之后发生。
         </li>
       {/each}
       {#if factors.filter((x) => x.age != undefined).length > 0}
@@ -119,8 +137,10 @@
     <ul>
       {#each hierarchy as evt}
         <li>
-          [前 {evt.level} 个事件] 「{vendor.EVENTS[evt.event.event].event}」 (#{evt
-            .event.event})
+          [前 {evt.level} 个事件] 「{vendor.EVENTS[evt.event.event].event}」 (<a
+            href={`/e/${evt.event.event}`}
+            use:link>#{evt.event.event}</a
+          >)
         </li>
       {/each}
     </ul>
@@ -136,7 +156,9 @@
     <ul>
       {#each laterEvents as evtId}
         <li>
-          「{vendor.EVENTS[evtId].event}」 (#{evtId})。
+          「{vendor.EVENTS[evtId].event}」 (<a href={`/e/${evtId}`} use:link
+            >#{evtId}</a
+          >)。
         </li>
       {/each}
     </ul>
