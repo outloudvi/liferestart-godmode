@@ -109,24 +109,28 @@
     {/each}
   </select>
 
-  {#if factors.length > 0}
+  {#if _selected}
     <hr />
     <h3>这个事件...</h3>
     <ul>
-      {#each factors.filter((x) => x.event) as factor}
-        <li>
-          可能于 「{vendor.EVENTS[factor.event].event}」 (<a
-            href={`/e/${factor.event}`}
-            use:link>#{factor.event}</a
-          >) 之后发生。
-        </li>
-      {/each}
-      {#if factors.filter((x) => x.age != undefined).length > 0}
-        <li>
-          可能在以下年龄自然发生：{numRangeToStr(
-            dedup(factors.filter((x) => x.age != undefined).map((x) => x.age))
-          )}
-        </li>
+      {#if factors.length > 0}
+        {#each factors.filter((x) => x.event) as factor}
+          <li>
+            可能于 「{vendor.EVENTS[factor.event].event}」 (<a
+              href={`/e/${factor.event}`}
+              use:link>#{factor.event}</a
+            >) 之后发生。
+          </li>
+        {/each}
+        {#if factors.filter((x) => x.age != undefined).length > 0}
+          <li>
+            可能在以下年龄自然发生：{numRangeToStr(
+              dedup(factors.filter((x) => x.age != undefined).map((x) => x.age))
+            )}
+          </li>
+        {/if}
+      {:else}
+        <li>似乎不会发生。</li>
       {/if}
     </ul>
   {/if}
