@@ -3,6 +3,7 @@
   import { link, location } from 'svelte-spa-router'
 
   import * as vendor from './utils/vendor'
+  import type { CondExpr } from './utils/vendor.types'
 
   const EVENTS = Object.values(vendor.EVENTS)
 
@@ -13,7 +14,7 @@
   let hierarchy: vendor.EventHierarchyReply[] = []
   let hierarchyRoot: number[] = []
   let filteredEvents = EVENTS
-  let laterEvents: number[] = []
+  let laterEvents: [CondExpr,number][] = []
   let lastEvent = -1
   let hierarchyCache: { id: number; item: any }[] = []
 
@@ -61,9 +62,7 @@
     if (_item === '') return
     const item = Number(_item)
     const event = vendor.getEventById(item)
-    laterEvents = (event?.branch || []).map((x) =>
-      x.split(':').length > 1 ? Number(x.split(':')[1]) : Number(x)
-    )
+    laterEvents = event?.branch || []
     if (event === null) {
       alert('No such event')
       return
@@ -87,6 +86,39 @@
     }
     hierarchy = hierarchyList.events
     hierarchyRoot = dedup(hierarchyList.parents)
+  }
+
+  function formatProp(prop: string) {
+    switch(prop) {
+      case 'AGE': return '年龄'
+      case 'CHR': return '颜值'
+      case 'INT': return '智力'
+      case 'STR': return '体质'
+      case 'MNY': return '家境'
+      case 'SPR': return '快乐'
+      case 'LIF': return '生命'
+      case 'TMS': return '重开次数'
+      default:    return '???'
+    }
+  }
+
+  function formatCond(expr: CondExpr): string {
+    switch(expr.tag) {
+      case "Cmp": return `${formatProp(expr.val[0])}${expr.val[1]}${expr.val[2]}`
+      case "Ref": {
+        const negate = expr.val[1] === '!' ? '不' : ''
+        switch(expr.val[0]) {
+          case 'TLT':  return `${negate}拥有天赋${expr.val[2]}`
+          case 'EVT':  return `此生${negate}曾经历过事件${expr.val[2]}`
+          case 'AEVT': return `此生前${negate}曾触发${expr.val[2]}继承事件`
+          default:     return '?????'
+        }
+      }
+      case "Or":  return `满足下列条件之一：${expr.val.map(formatCond)}`
+      case "And": return `满足下列所有条件：${expr.val.map(formatCond)}`
+      default: return '????'
+    }
+
   }
 
   afterUpdate(() => {
@@ -139,7 +171,7 @@
       {#if factors.length > 0}
         {#each factors.filter((x) => x.event) as factor}
           <li>
-            可能于 「{vendor.EVENTS[factor.event].event}」 (<a
+            若{formatCond(factor.condition)}，将于 「{vendor.EVENTS[factor.event].event}」 (<a
               href={`/e/${factor.event}`}
               use:link>#{factor.event}</a
             >) 之后发生。
@@ -181,11 +213,11 @@
     <hr />
     <h3>这个事件之后可能会...</h3>
     <ul>
-      {#each laterEvents as evtId}
+      {#each laterEvents as [evtCond, evtId]}
         <li>
           「{vendor.EVENTS[evtId].event}」 (<a href={`/e/${evtId}`} use:link
             >#{evtId}</a
-          >)。
+          >)，若{formatCond(evtCond)}。
         </li>
       {/each}
     </ul>

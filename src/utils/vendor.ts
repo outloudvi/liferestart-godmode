@@ -4,7 +4,7 @@ import type {
   EventInfo,
   TalentInfo,
 } from './vendor.types.js'
-import { preprocessAges } from './vendorHelper.js'
+import { preprocessAges, preprocessEvents } from './vendorHelper.js'
 
 import _TALENTS from '../vendor/data/talents.json'
 import _EVENTS from '../vendor/data/events.json'
@@ -14,7 +14,7 @@ export const AGES = preprocessAges(
   _AGES as unknown as { [key: string]: AgeInfo }
 )
 export const TALENTS = _TALENTS as unknown as { [key: string]: TalentInfo }
-export const EVENTS = _EVENTS as unknown as { [key: string]: EventInfo }
+export const EVENTS = preprocessEvents(_EVENTS)
 
 export function getEventById(id: number): EventInfo | null {
   return EVENTS[id] ?? null
@@ -32,13 +32,13 @@ export function checkEventFactor(evt: EventInfo): EventFactor[] {
   for (const item of Object.values(EVENTS)) {
     if (!item.branch) continue
     const canComeFrom = item.branch.filter(
-      (x) => x.split(':')[1] == String(evt.id)
+      (x) => x[1] == evt.id
     )
     for (const i of canComeFrom) {
       if (item.id !== evt.id)
         ret.push({
           event: item.id,
-          condition: i.split(':')[0],
+          condition: i[0],
         })
     }
   }
