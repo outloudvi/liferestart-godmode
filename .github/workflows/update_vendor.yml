@@ -1,0 +1,35 @@
+name: Sync submodules
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Update every two days
+    - cron: "25 16 */2 * *"
+
+jobs:
+  sync_submodules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          submodules: true
+
+      - name: Fetch and update
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
+
+      - name: Commit submodules
+        continue-on-error: true
+        run: |
+          git config --local user.email "noreply@ci.outv.im"
+          git config --local user.name "LibreHouse CI"
+          git add -A
+          git commit -m "chore: update vendor"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
