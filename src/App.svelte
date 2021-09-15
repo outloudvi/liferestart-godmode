@@ -10,6 +10,8 @@
   let _selected: number
   let _search: string = ''
 
+  let prerequisite: CondExpr | null
+  let conflict: CondExpr | null
   let factors: vendor.EventFactor[] = []
   let hierarchy: vendor.EventHierarchyReply[] = []
   let hierarchyRoot: number[] = []
@@ -68,6 +70,8 @@
       return
     }
 
+    prerequisite = event.include ?? null
+    conflict = event.exclude ?? null
     factors = vendor.checkEventFactor(event)
 
     const hierarchyCacheHit = hierarchyCache.filter((x) => x.id === event.id)
@@ -167,6 +171,15 @@
   {#if _selected}
     <hr />
     <h3>这个事件...</h3>
+    <ul>
+      {#if prerequisite}
+        <li>发生前需要{formatCond(prerequisite)}</li>
+      {/if}
+      {#if conflict}
+        <li>发生前需要不{formatCond(conflict)}</li>
+      {/if}
+    </ul>
+    <ul></ul>
     <ul>
       {#if factors.length > 0}
         {#each factors.filter((x) => x.event) as factor}
