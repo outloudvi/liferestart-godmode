@@ -1,5 +1,9 @@
 type NoS = number | string // number or string'd number
-export type CondExpr = string
+export type CondExpr =
+  | {tag: "Cmp", val: [prop: string, op: string, num: number]}
+  | {tag: "Ref", val: [prop: string, op: string, ids: number[]]}
+  | {tag: "Or",  val: CondExpr[]}
+  | {tag: "And", val: CondExpr[]}
 // vendor/src/property:Property.TYPES
 export enum PropTypes {
   AGE = 'AGE',
@@ -36,7 +40,7 @@ export interface EventInfo {
   include?: CondExpr
   exclude?: CondExpr
   NoRandom?: number
-  branch?: CondExpr[]
+  branch?: [CondExpr, number][]
 }
 
 // vendor/view/condition_test.html
