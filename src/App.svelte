@@ -110,16 +110,16 @@
     switch(expr.tag) {
       case "Cmp": return `${formatProp(expr.val[0])}${expr.val[1]}${expr.val[2]}`
       case "Ref": {
-        const negate = expr.val[1] === '!' ? '不' : ''
+        const negate = expr.val[1] === '!' ? '无' : ''
         switch(expr.val[0]) {
-          case 'TLT':  return `${negate}拥有天赋${expr.val[2]}`
-          case 'EVT':  return `此生${negate}曾经历过事件${expr.val[2]}`
-          case 'AEVT': return `此生前${negate}曾触发${expr.val[2]}继承事件`
+          case 'TLT':  return `${negate}天赋${expr.val[2]}`
+          case 'EVT':  return `${negate}事件${expr.val[2]}`
+          case 'AEVT': return `${negate}继承事件${expr.val[2]}`
           default:     return '?????'
         }
       }
-      case "Or":  return `满足下列条件之一：${expr.val.map(formatCond)}`
-      case "And": return `满足下列所有条件：${expr.val.map(formatCond)}`
+      case "Or":  return `下列条件任一：${expr.val.map(formatCond).join('，')}`
+      case "And": return `下列所有条件：${expr.val.map(formatCond).join('，')}`
       default: return '????'
     }
 
@@ -173,10 +173,10 @@
     <h3>这个事件...</h3>
     <ul>
       {#if prerequisite}
-        <li>发生前需要{formatCond(prerequisite)}</li>
+        <li>发生前需要满足{formatCond(prerequisite)}</li>
       {/if}
       {#if conflict}
-        <li>发生前需要不{formatCond(conflict)}</li>
+        <li>发生前需要不满足{formatCond(conflict)}</li>
       {/if}
     </ul>
     <ul></ul>
