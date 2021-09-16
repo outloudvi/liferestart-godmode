@@ -5,6 +5,8 @@
   import * as vendor from './utils/vendor'
   import type { CondExpr } from './utils/vendor.types'
 
+  import Cond from './CondExpr.svelte'
+
   const EVENTS = Object.values(vendor.EVENTS)
 
   let _selected: number
@@ -92,39 +94,6 @@
     hierarchyRoot = dedup(hierarchyList.parents)
   }
 
-  function formatProp(prop: string) {
-    switch(prop) {
-      case 'AGE': return '年龄'
-      case 'CHR': return '颜值'
-      case 'INT': return '智力'
-      case 'STR': return '体质'
-      case 'MNY': return '家境'
-      case 'SPR': return '快乐'
-      case 'LIF': return '生命'
-      case 'TMS': return '重开次数'
-      default:    return '???'
-    }
-  }
-
-  function formatCond(expr: CondExpr): string {
-    switch(expr.tag) {
-      case "Cmp": return `${formatProp(expr.val[0])}${expr.val[1]}${expr.val[2]}`
-      case "Ref": {
-        const negate = expr.val[1] === '!' ? '无' : ''
-        switch(expr.val[0]) {
-          case 'TLT':  return `${negate}天赋${expr.val[2]}`
-          case 'EVT':  return `${negate}事件${expr.val[2]}`
-          case 'AEVT': return `${negate}继承事件${expr.val[2]}`
-          default:     return '?????'
-        }
-      }
-      case "Or":  return `下列条件任一：${expr.val.map(formatCond).join('，')}`
-      case "And": return `下列所有条件：${expr.val.map(formatCond).join('，')}`
-      default: return '????'
-    }
-
-  }
-
   afterUpdate(() => {
     const evt = Number(params.event)
     if (Number.isNaN(evt)) return
@@ -173,10 +142,10 @@
     <h3>这个事件...</h3>
     <ul>
       {#if prerequisite}
-        <li>发生前需要满足{formatCond(prerequisite)}</li>
+        <li>发生前需要满足<Cond expr={prerequisite} /></li>
       {/if}
       {#if conflict}
-        <li>发生前需要不满足{formatCond(conflict)}</li>
+        <li>发生前需要不满足<Cond expr={conflict} /></li>
       {/if}
     </ul>
     <ul></ul>
@@ -184,7 +153,8 @@
       {#if factors.length > 0}
         {#each factors.filter((x) => x.event) as factor}
           <li>
-            若{formatCond(factor.condition)}，将于 「{vendor.EVENTS[factor.event].event}」 (<a
+            若满足<Cond expr={factor.condition}
+            />，将于 「{vendor.EVENTS[factor.event].event}」 (<a
               href={`/e/${factor.event}`}
               use:link>#{factor.event}</a
             >) 之后发生。
@@ -228,9 +198,10 @@
     <ul>
       {#each laterEvents as [evtCond, evtId]}
         <li>
-          「{vendor.EVENTS[evtId].event}」 (<a href={`/e/${evtId}`} use:link
-            >#{evtId}</a
-          >)，若{formatCond(evtCond)}。
+          若满足<Cond expr={evtCond} />，将发生「{vendor.EVENTS[evtId].event}」 (<a
+            href={`/e/${evtId}`}
+            use:link>#{evtId}</a
+          >)。
         </li>
       {/each}
     </ul>
