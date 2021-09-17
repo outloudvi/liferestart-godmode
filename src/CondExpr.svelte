@@ -123,7 +123,8 @@ import App from "./App.svelte";
     position: absolute;
     z-index: 1;
     bottom: 100%;
-    left: 20%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .tooltip:hover .tooltiptext {
