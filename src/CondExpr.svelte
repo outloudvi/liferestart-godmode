@@ -35,11 +35,11 @@ import App from "./App.svelte";
 </script>
 
 {#if expr.tag === "Cmp"}
-  <span class='nested-cond-{depth}'>
+  <span class='nested-cond nested-cond-{depth}'>
     {formatProp(expr.val[0])}{expr.val[1]}{expr.val[2]}
   </span>
 {:else if expr.tag === 'Ref'}
-  <span class='nested-cond-{depth}'>
+  <span class='nested-cond nested-cond-{depth}'>
 
     {showIsNegate(expr.val[1])
     }{#if expr.val[0] === 'TLT'}
@@ -61,19 +61,19 @@ import App from "./App.svelte";
 
   </span>
 {:else if expr.tag === 'Or'}
-  <span class='nested-cond-{depth}'>
-    满足下列条件任一：
+  <span class='nested-cond nested-cond-{depth}'>
+    满足下列任一条件：
     {#each expr.val as subExpr, index}
       {#if index != 0}，{/if}
       <svelte:self expr={subExpr} depth={depth+1}></svelte:self>
     {/each}
   </span>
 {:else if expr.tag === 'And'}
-  <span class='nested-cond-{depth}'>
-    {#each expr.val as subExpr, index}
+  <span class='nested-cond nested-cond-{depth}'
+    >{#each expr.val as subExpr, index}
       {#if index != 0}
-      {' '}且{/if}
-      <svelte:self expr={subExpr} depth={depth+1}></svelte:self>
+        {' '}且
+      {/if}<svelte:self expr={subExpr} depth={depth+1}></svelte:self>
     {/each}
   </span>
 {/if}
@@ -82,14 +82,28 @@ import App from "./App.svelte";
 
 
 <style>
+  .nested-cond {
+    background-color: rgba(128,128,128,0.25);
+    border-radius: 3px;
+  }
+
+  .nested-cond-0 {
+    padding: 6px;
+    margin-right: 2px;
+
+    line-height: 2.3;
+  }
+
+  .nested-cond-0 * {
+    line-height: normal;
+  }
+
   .nested-cond-1 {
-    /* text-decoration-line: underline;
-    text-decoration-style: solid; */
+    padding: 4px;
   }
 
   .nested-cond-2 {
-    /* text-decoration-line: underline;
-    text-decoration-style: double; */
+    padding: 2px;
   }
 
   .tooltip {
