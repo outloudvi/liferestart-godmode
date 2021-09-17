@@ -142,10 +142,10 @@
     <h3>这个事件...</h3>
     <ul>
       {#if prerequisite}
-        <li>发生前需要满足<Cond expr={prerequisite} /></li>
+        <li>发生的前置条件：<Cond expr={prerequisite} /></li>
       {/if}
       {#if conflict}
-        <li>发生前需要不满足<Cond expr={conflict} /></li>
+        <li>不会在满足下列条件时发生：<Cond expr={conflict} /></li>
       {/if}
     </ul>
     <ul></ul>
