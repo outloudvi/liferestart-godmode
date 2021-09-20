@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { afterUpdate, onMount } from 'svelte'
-  import { link, location } from 'svelte-spa-router'
+  import { afterUpdate } from 'svelte'
+  import { link } from 'svelte-spa-router'
 
   import * as vendor from './utils/vendor'
   import type { CondExpr } from './utils/vendor.types'
@@ -18,7 +18,7 @@
   let hierarchy: vendor.EventHierarchyReply[] = []
   let hierarchyRoot: number[] = []
   let filteredEvents = EVENTS
-  let laterEvents: [CondExpr,number][] = []
+  let laterEvents: [CondExpr, number][] = []
   let lastEvent = -1
   let hierarchyCache: { id: number; item: any }[] = []
 
@@ -139,7 +139,7 @@
 
   {#if _selected}
     <hr />
-    <div class='content'>
+    <div class="content">
       <h3>这个事件...</h3>
       <ul>
         {#if prerequisite}
@@ -149,22 +149,24 @@
           <li>不会在满足下列条件时发生：<Cond expr={conflict} /></li>
         {/if}
       </ul>
-      <ul></ul>
+      <ul />
       <ul>
         {#if factors.length > 0}
           {#each factors.filter((x) => x.event) as factor}
             <li>
-              若满足<Cond expr={factor.condition}
-              />，将于 「{vendor.EVENTS[factor.event].event}」 (<a
-                href={`/e/${factor.event}`}
-                use:link>#{factor.event}</a
+              若满足<Cond expr={factor.condition} />，将于 「{vendor.EVENTS[
+                factor.event
+              ].event}」 (<a href={`/e/${factor.event}`} use:link
+                >#{factor.event}</a
               >) 之后发生。
             </li>
           {/each}
           {#if factors.filter((x) => x.age != undefined).length > 0}
             <li>
               可能在以下年龄自然发生：{numRangeToStr(
-                dedup(factors.filter((x) => x.age != undefined).map((x) => x.age))
+                dedup(
+                  factors.filter((x) => x.age != undefined).map((x) => x.age)
+                )
               )}
             </li>
           {/if}
@@ -200,15 +202,13 @@
 
   {#if laterEvents.length}
     <hr />
-    <div class='content'>
+    <div class="content">
       <h3>这个事件之后可能会...</h3>
       <ul>
         {#each laterEvents as [evtCond, evtId]}
           <li>
-            若满足<Cond expr={evtCond} />，将发生「{vendor.EVENTS[evtId].event}」 (<a
-              href={`/e/${evtId}`}
-              use:link>#{evtId}</a
-            >)。
+            若满足<Cond expr={evtCond} />，将发生「{vendor.EVENTS[evtId]
+              .event}」 (<a href={`/e/${evtId}`} use:link>#{evtId}</a>)。
           </li>
         {/each}
       </ul>
@@ -238,10 +238,22 @@
   }
 
   .content {
-    max-width: 1000px;
-    display: block;
-    margin: auto;
+    margin: 0 15px;
     text-align: left;
+  }
+
+  @media (min-width: 768px) {
+    .content {
+      max-width: 720px;
+      margin: auto;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .content {
+      max-width: 1000px;
+      margin: auto;
+    }
   }
 
   .App p {
@@ -250,36 +262,5 @@
 
   .center {
     text-align: center;
-  }
-
-  .App-header {
-    background-color: #f9f6f6;
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-  }
-
-  .App-link {
-    color: #ff3e00;
-  }
-
-  .App-logo {
-    height: 36vmin;
-    pointer-events: none;
-    margin-bottom: 3rem;
-    animation: App-logo-spin infinite 1.6s ease-in-out alternate;
-  }
-
-  @keyframes App-logo-spin {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1.06);
-    }
   }
 </style>
