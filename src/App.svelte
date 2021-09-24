@@ -94,6 +94,15 @@
     hierarchyRoot = dedup(hierarchyList.parents)
   }
 
+  function updateHistory(_item: string) {
+    if (!window.history) return
+    const item = Number(_item)
+    const url = new URL(document.location)
+    console.log('Refreshing', item)
+    url.hash = `/e/${item}`
+    window.history.pushState({}, '', url)
+  }
+
   afterUpdate(() => {
     const evt = Number(params.event)
     if (Number.isNaN(evt)) return
@@ -127,7 +136,10 @@
   <select
     id="selector"
     bind:value={_selected}
-    on:change={() => showAnalysis(_selected)}
+    on:change={() => {
+      updateHistory(_selected)
+      showAnalysis(_selected)
+    }}
   >
     <option value="" />
     {#each filteredEvents as evt}
