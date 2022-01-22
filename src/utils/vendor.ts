@@ -6,9 +6,9 @@ import type {
 } from './vendor.types.js'
 import { preprocessAges, preprocessEvents } from './vendorHelper.js'
 
-import _TALENTS from '../vendor/data/talents.json'
-import _EVENTS from '../vendor/data/events.json'
-import _AGES from '../vendor/data/age.json'
+import _TALENTS from '../vendor/public/data/zh-cn/talents.json'
+import _EVENTS from '../vendor/public/data/zh-cn/events.json'
+import _AGES from '../vendor/public/data/zh-cn/age.json'
 
 export const AGES = preprocessAges(
   _AGES as unknown as { [key: string]: AgeInfo }
@@ -31,9 +31,7 @@ export function checkEventFactor(evt: EventInfo): EventFactor[] {
   // If it has a branch source
   for (const item of Object.values(EVENTS)) {
     if (!item.branch) continue
-    const canComeFrom = item.branch.filter(
-      (x) => x[1] == evt.id
-    )
+    const canComeFrom = item.branch.filter((x) => x[1] == evt.id)
     for (const i of canComeFrom) {
       if (item.id !== evt.id)
         ret.push({
